@@ -7,20 +7,19 @@
 * @class
 */
 
-interface NumberArrayConstructor {
+export interface NumberArrayConstructor {
     new (length: number): NumberArray;
     new (buffer: ArrayBuffer, byteOffset?: number, length?: number): NumberArray;
     
     BYTES_PER_ELEMENT?: number;
 }
 
-interface NumberArray {
+export interface NumberArray {
     length: number;
     [index: number]: number;
 }
 
-export = Polyfit;
-class Polyfit {
+export class Polyfit {
     private x: NumberArray;
     private y: NumberArray;
     private FloatXArray: Float32ArrayConstructor|Float64ArrayConstructor;
