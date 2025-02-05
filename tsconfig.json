@@ -1,16 +1,35 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"noImplicitAny": true
-	},
-	"files": [
-		"index.ts"
-	],
-	"rules": {
-		"semicolon": true,
-		"quotemark": "single",
-		"curly": true,
-		"triple-equals": true,
-		"no-any": true
-	}
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es2017",
+    "module": "ES2022",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "skipDefaultLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "outDir": "./dist",
+    "strictPropertyInitialization": false,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "~/*": [
+        "./src/*"
+      ],
+      "~~/*": [
+        "./*"
+      ]
+    }
+  },
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register"
+    ]
+  }
 }
