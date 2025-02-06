@@ -42,6 +42,13 @@ const terms = poly.computeCoefficients(6);
 console.log(terms); // Shows polynomial coefficients
 ```
 
+### Finding the best fit for a given correlation coefficient
+
+```typescript
+const terms = poly.computeBestFit(100,0.99); // Max degree, min correlation coefficient
+console.log(terms); // Shows polynomial coefficients
+```
+
 ### Computing statistical metrics
 
 ```typescript
