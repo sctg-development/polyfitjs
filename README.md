@@ -1,69 +1,73 @@
-polyfit.js
-============
+# @sctg/polyfitjs
 
-Polynomial fitment solver library for node.js
+[![Build](https://github.com/sctg-development/polyfitjs/actions/workflows/build_publish.yaml/badge.svg)](https://github.com/sctg-development/polyfitjs/actions/workflows/build_publish.yaml)
+[![npm version](https://badge.fury.io/js/@sctg%2Fpolyfitjs.svg)](https://badge.fury.io/js/@sctg%2Fpolyfitjs)
 
-Heavily, heavily inspired by Paul Lutus (lutusp@arachnoid.com) - http://www.arachnoid.com/polysolve
-This was just a way to node-ize / component-ize this library, and format it a little better.
+A TypeScript library for polynomial fitting.
 
-Copyright © 2023, P. Lutus and Ryan Fink. Released under the GPL https://www.gnu.org/licenses/gpl-3.0.en.html
+## Features
 
-Usage
-============
+- Polynomial fitting up to n degrees
+- Support for `Array`, `Float32Array` and `Float64Array`
+- Correlation coefficient calculation
+- Standard error calculation
+- Polynomial expression generation
 
-To get a polynomial function that you can pass an x value into
-and get the corresponding y value (the parameter is the number of degrees)
+## Installation
 
-```javascript
-
-  var Polyfit = require('polyfit');
-  var poly = new Polyfit([ 1, 2, 3, 4, 5 ], [ 0.01, 0.03, -0.02, 0.03, 0.02 ]);
-  var solver = poly.getPolynomial(6);
+```bash
+npm install @sctg/polyfitjs
 ```
 
-Solver will be a function that you can call with an x value.
+## Usage
 
-```javascript
+### Creating a polynomial function
 
-  console.log(solver(1.17));
+```typescript
+import { Polyfit } from '@sctg/polyfitjs';
+
+const x = [1, 2, 3, 4, 5];
+const y = [0.01, 0.03, -0.02, 0.03, 0.02];
+const poly = new Polyfit(x, y);
+const solver = poly.getPolynomial(6);
+
+// Using the solver
+console.log(solver(1.17)); // Calculates y for x = 1.17
 ```
 
-Computing coefficient terms:
+### Getting coefficients
 
-```javascript
-
-  var terms = poly.computeCoefficients(6);
+```typescript
+const terms = poly.computeCoefficients(6);
+console.log(terms); // Shows polynomial coefficients
 ```
 
-Use those terms to get a standard error:
+### Computing statistical metrics
 
-```javascript
-
-  var standardError = poly.standardError(terms);
+```typescript
+const terms = poly.computeCoefficients(6);
+const correlation = poly.correlationCoefficient(terms);
+const stdError = poly.standardError(terms);
 ```
 
-Or to get a correlation coefficient
+## Building
 
-```javascript
+To build the project, run the following command:
 
-  var cc = poly.correlationCoefficient(terms);
+```bash
+  git clone git@github.com:sctg-development/polyfitjs.git
+  cd polyfitjs
+  npm ci
+  npm run build
+  npm test
 ```
 
-License
-============
-(Based on GNU license from Paul Lutus)
+## License
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
+Copyright © 2023, P. Lutus and Ryan Fink.  
+Modifications © 2025, SCTG Development.
+Released under GPL v3 - [Details](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.     
-                                                                      
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the
-Free Software Foundation, Inc.,
-59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+## Acknowledgments
+
+Heavily inspired by Paul Lutus's work (<lutusp@arachnoid.com>) - [polysolve](http://www.arachnoid.com/polysolve)
