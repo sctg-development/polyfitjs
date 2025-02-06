@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "test": "mocha",
-    "build": "tsup index.ts --clean --dts --format esm"
+    "build": "tsup index.ts --clean --format esm"
   },
   "devDependencies": {
     "jshint": "^2.8.0",
