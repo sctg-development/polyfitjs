@@ -1,6 +1,7 @@
 'use strict';
 
 // Copyright © 2023, P. Lutus and Ryan Fink. Released under the GPL https://www.gnu.org/licenses/gpl-3.0.en.html
+// Modification © 2025 Ronan Le Meillat for a working version with TypeScript
 
 /**
 * Polyfit
@@ -19,6 +20,14 @@ export interface NumberArray {
     [index: number]: number;
 }
 
+/**
+ * Polyfit polynomial fitment solver
+ * note x and y must be arrays of the same type
+ * @constructor
+ * @param {number[]|Float32Array|Float64Array} x - x values
+ * @param {number[]|Float32Array|Float64Array} y - y values
+ * @returns {Polyfit}
+ */
 export class Polyfit {
     private x: NumberArray;
     private y: NumberArray;
@@ -80,7 +89,7 @@ export class Polyfit {
         numCols : number
     ): void {
 
-        for (var i = col + 1; i < numCols; i++) {
+        for (let i = col + 1; i < numCols; i++) {
             matrix[row][i] /= matrix[row][col];
         }
 
@@ -129,10 +138,10 @@ export class Polyfit {
 
         const rows = matrix.length;
         const cols = matrix[0].length;
-        var i = 0;
-        var j = 0;
-        var k: number;
-        var swap: NumberArray;
+        let i = 0;
+        let j = 0;
+        let k: number;
+        let swap: NumberArray;
 
         while (i < rows && j < cols) {
             k = i;
@@ -175,10 +184,10 @@ export class Polyfit {
         terms : NumberArray
     ): number {
 
-        var a = 0;
-        var exp = 0;
+        let a = 0;
+        let exp = 0;
 
-        for (var i = 0, len = terms.length; i < len; i++) {
+        for (let i = 0, len = terms.length; i < len; i++) {
             a += terms[i] * Math.pow(x, exp++);
         }
 
@@ -196,17 +205,17 @@ export class Polyfit {
         terms : NumberArray
     ): number {
 
-        var r = 0;
+        let r = 0;
         const n = this.x.length;
-        var sx = 0;
-        var sx2 = 0;
-        var sy = 0;
-        var sy2 = 0;
-        var sxy = 0;
-        var x: number;
-        var y: number;
+        let sx = 0;
+        let sx2 = 0;
+        let sy = 0;
+        let sy2 = 0;
+        let sxy = 0;
+        let x: number;
+        let y: number;
 
-        for (var i = 0; i < n; i++) {
+        for (let i = 0; i < n; i++) {
             x = Polyfit.regress(this.x[i], terms);
             y = this.y[i];
             sx += x;
@@ -216,7 +225,7 @@ export class Polyfit {
             sy2 += y * y;
         }
 
-        var div = Math.sqrt((sx2 - (sx * sx) / n) * (sy2 - (sy * sy) / n));
+        const div = Math.sqrt((sx2 - (sx * sx) / n) * (sy2 - (sy * sy) / n));
 
         if (div !== 0) {
             r = Math.pow((sxy - (sx * sy) / n) / div, 2);
@@ -236,12 +245,12 @@ export class Polyfit {
         terms : NumberArray
     ): number {
 
-        var r = 0;
+        let r = 0;
         const n = this.x.length;
 
         if (n > 2) {
-            var a = 0;
-            for (var i = 0; i < n; i++) {
+            let a = 0;
+            for (let i = 0; i < n; i++) {
                 a += Math.pow((Polyfit.regress(this.x[i], terms) - this.y[i]), 2);
             }
             r = Math.sqrt(a / (n - 2));
@@ -267,18 +276,22 @@ export class Polyfit {
         const rs = 2 * (++p) - 1;
         let i: number;
 
-        var m: NumberArray[] = [];
+        const m: NumberArray[] = [];
 
         // Initialize array with 0 values
         if (this.FloatXArray) {
             // fast FloatXArray-Matrix init
             const bytesPerRow = (p+1) * this.FloatXArray.BYTES_PER_ELEMENT;
-            var buffer = new ArrayBuffer(p * bytesPerRow);
+            const buffer = new ArrayBuffer(p * bytesPerRow);
             for (i = 0; i < p; i++) {
-                m[i] = new this.FloatXArray(buffer, i * bytesPerRow, p+1);
+                if (this.FloatXArray.name === "Float32Array") {
+                    m[i] = new Float32Array(buffer, i * bytesPerRow, p+1);
+                } else {
+                    m[i] = new Float64Array(buffer, i * bytesPerRow, p+1);
+                }
             }
         } else {
-            var zeroRow: number[] = [];
+            const zeroRow: number[] = [];
             for (i = 0; i <= p; i++) {
                 zeroRow[i] = 0;
             }
@@ -289,15 +302,15 @@ export class Polyfit {
             }
         }
 
-        var mpc = [n];
+        const mpc = [n];
 
         for (i = 1; i < rs; i++) {
             mpc[i] = 0;
         }
 
         for (i = 0; i < n; i++) {
-            let x = this.x[i];
-            let y = this.y[i];
+            const x = this.x[i];
+            const y = this.y[i];
 
             // Process precalculation array
             for (r = 1; r < rs; r++) {
@@ -319,7 +332,7 @@ export class Polyfit {
 
         Polyfit.gaussJordanEchelonize(m);
 
-        var terms =
+        const terms =
             this.FloatXArray && new this.FloatXArray(m.length) || <NumberArray>[];
 
         for (i = m.length - 1; i >= 0; i--) {
@@ -345,16 +358,16 @@ export class Polyfit {
             throw new Error('Degree must be a positive integer');
         }
 
-        var terms = this.computeCoefficients(degree);
-        var eqParts: string[] = [];
+        const terms = this.computeCoefficients(degree);
+        const eqParts: string[] = [];
 
         eqParts.push(terms[0].toPrecision());
 
-        for (var i = 1, len = terms.length; i < len; i++) {
+        for (let i = 1, len = terms.length; i < len; i++) {
             eqParts.push(terms[i] + ' * Math.pow(x, ' + i + ')');
         }
 
-        var expr = 'return ' + eqParts.join(' + ') + ';';
+        const expr = 'return ' + eqParts.join(' + ') + ';';
 
         /* jshint evil: true */
         return <(x: number) => number>new Function('x', expr);
@@ -378,7 +391,7 @@ export class Polyfit {
         }
 
         const terms = this.computeCoefficients(degree);
-        var eqParts: string[] = [];
+        const eqParts: string[] = [];
         const len = terms.length;
 
         eqParts.push(terms[0].toPrecision());
