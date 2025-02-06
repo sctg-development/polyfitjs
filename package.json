@@ -26,6 +26,10 @@
     "test": "mocha",
     "build": "tsup index.ts --clean --format esm"
   },
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
   "devDependencies": {
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
