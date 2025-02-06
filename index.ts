@@ -261,9 +261,44 @@ export class Polyfit {
     }
 
     /**
-     * Compute coefficients for given data matrix
-     * 
-     * @param {number} p
+     * Try to find the best degree of fitment for the data
+     * @param {number} maxDegree - the maximum degree to try
+     * @param {number} correlation - the correlation to accept (optional) default 0.9
+     */
+    public computeBestFit(
+        maxDegree: number,
+        correlation?: number,
+    ): NumberArray {
+        
+        if (correlation === undefined) {
+            correlation = 0.9;
+        }
+
+        for (let i = 1; i <= maxDegree; i++) {
+            const terms = this.computeCoefficients(i);
+            const _correlation = this.correlationCoefficient(terms);
+            if (_correlation > correlation ) {
+                return terms;
+
+            }
+        }
+        return [];
+    }
+
+    /**
+     * Compute coefficients of a fitted polynomial for given data matrix
+     * @example
+     * const polyfit = new Polyfit(_x64, _y64);
+     * const terms = polyfit.computeCoefficients(6);
+     * const correlation = polyfit.correlationCoefficient(terms);
+     * const stdError = polyfit.standardError(terms);
+     * console.warn(
+     *   `Polynomial fit: ${terms[5]}•x^5 + ${terms[4]}•x^4 + ${terms[3]}•x^3 + ` +
+     *   `${terms[2]}•x^2 + ${terms[1]}•x + ${terms[0]}\n` +
+     *   `Correlation coefficient: ${correlation}\n` +
+     *   `Standard error: ${stdError}`
+     * );
+     * @param {number} p - degree of the polynomial
      * @returns {number[]|Float32Array|Float64Array}
      */
     public computeCoefficients(
@@ -345,7 +380,7 @@ export class Polyfit {
 
     /**
      * Using given degree of fitment, return a function that will calculate
-     * the y for a given x
+     * the y for a given x with the computed coefficients
      * 
      * @param {number} degree  > 0
      * @returns {Function}     f(x) = 

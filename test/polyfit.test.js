@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // Copyright © 2023, P. Lutus and Ryan Fink. Released under the GPL https://www.gnu.org/licenses/gpl-3.0.en.html
 
 /* ~ Deps ~ */
 
 import 'should';
+import {describe,it} from 'mocha';
 import {Polyfit} from '../dist/index.js';
 
 /* ~ Test data ~ */
@@ -108,6 +110,35 @@ describe('polyfit', function () {
     const time = process.hrtime(start);
     
     done()
+  });
+  it('Should find the autofit the polynomial for a given set of data', function (done) {
+    const pf = new Polyfit(xd, yd);
+    const terms = pf.computeBestFit(100);
+    terms.should.eql([
+      2.6937037085228717,
+      0.9585108884477604,
+      -1.150528829693737,
+      1.0886762123312619,
+      -0.38856236522551396,
+      0.054575046507659646,
+      -0.002598631007421001
+    ]);
+    done();
+  });
+  it('Should find the autofit the polynomial for a given set of data and a specified correlation', function (done) {
+    const pf = new Polyfit(xd, yd);
+    const terms = pf.computeBestFit(100,0.99);
+    terms.should.eql([
+      2.999999997712511,
+      -2.9424974926425946,
+      0.5993530802528433,
+      3.986915075693,
+      -2.7724660881265044,
+      0.7025214902871045,
+      -0.0768869869287576,
+      0.003060929212042978,
+    ]);
+    done();
   });
 
 });
