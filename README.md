@@ -5,6 +5,10 @@
 
 A TypeScript library for polynomial fitting.
 
+## Star the project
+
+**If you appreciate my work, please consider giving it a star! 🤩**
+
 ## Features
 
 - Polynomial fitting up to n degrees
